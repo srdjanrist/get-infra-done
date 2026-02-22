@@ -47,6 +47,8 @@ Display the current state of the infrastructure generation pipeline, showing whi
      terraform/:         {exists ? "✓ ({count} files)" : "○"}
      SECURITY-AUDIT.md:  {exists ? "✓" : "○"}
      COST-ESTIMATE.md:   {exists ? "✓" : "○"}
+     AUDIT-SCAN.md:      {exists ? "✓" : "○"}
+     AUDIT-REPORT.md:    {exists ? "✓" : "○"}
    ```
 
 3. Suggest next action based on current stage:

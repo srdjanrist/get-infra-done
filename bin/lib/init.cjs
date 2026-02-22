@@ -253,6 +253,8 @@ function cmdInitProgress(cwd, raw) {
     terraform_exists: pathExistsInternal(cwd, '.infra/terraform'),
     security_audit_exists: pathExistsInternal(cwd, '.infra/SECURITY-AUDIT.md'),
     cost_estimate_exists: pathExistsInternal(cwd, '.infra/COST-ESTIMATE.md'),
+    audit_scan_exists: pathExistsInternal(cwd, '.infra/AUDIT-SCAN.md'),
+    audit_report_exists: pathExistsInternal(cwd, '.infra/AUDIT-REPORT.md'),
 
     // Config
     aws_region: config.aws_region,
@@ -265,9 +267,101 @@ function cmdInitProgress(cwd, raw) {
   output(result, raw);
 }
 
+function cmdInitAudit(cwd, raw) {
+  const config = loadConfig(cwd);
+
+  // Detect IaC type
+  const iacDetection = {
+    terraform: false,
+    cloudformation: false,
+    cdk: false,
+    pulumi: false,
+    kubernetes: false,
+    helm: false,
+    ansible: false,
+  };
+
+  try {
+    // Terraform
+    const tfFiles = execSync('find . -maxdepth 3 -name "*.tf" -not -path "./.terraform/*" 2>/dev/null | head -1', {
+      cwd, encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'],
+    }).trim();
+    if (tfFiles) iacDetection.terraform = true;
+
+    // Pulumi
+    if (pathExistsInternal(cwd, 'Pulumi.yaml')) iacDetection.pulumi = true;
+
+    // CDK
+    if (pathExistsInternal(cwd, 'cdk.json')) iacDetection.cdk = true;
+
+    // CloudFormation
+    if (pathExistsInternal(cwd, 'template.yaml') || pathExistsInternal(cwd, 'template.json')) {
+      iacDetection.cloudformation = true;
+    }
+
+    // Helm
+    if (pathExistsInternal(cwd, 'Chart.yaml')) iacDetection.helm = true;
+
+    // Kubernetes
+    const k8sFiles = execSync('find . -maxdepth 3 -name "*.yaml" -path "*/k8s/*" -o -name "*.yaml" -path "*/kubernetes/*" -o -name "*.yaml" -path "*/manifests/*" 2>/dev/null | head -1', {
+      cwd, encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'],
+    }).trim();
+    if (k8sFiles) iacDetection.kubernetes = true;
+
+    // Ansible
+    if (pathExistsInternal(cwd, 'ansible.cfg') || pathExistsInternal(cwd, 'playbook.yml') || pathExistsInternal(cwd, 'site.yml')) {
+      iacDetection.ansible = true;
+    }
+  } catch {}
+
+  const detectedTypes = Object.entries(iacDetection).filter(([, v]) => v).map(([k]) => k);
+
+  // Check previous audit state
+  let previousAuditDate = null;
+  const auditScanExists = pathExistsInternal(cwd, '.infra/AUDIT-SCAN.md');
+
+  if (auditScanExists) {
+    try {
+      const content = fs.readFileSync(path.join(cwd, '.infra', 'AUDIT-SCAN.md'), 'utf-8');
+      const dateMatch = content.match(/\*\*Date:\*\*\s*(.+)/i);
+      if (dateMatch) previousAuditDate = dateMatch[1].trim();
+    } catch {}
+  }
+
+  const result = {
+    // Models
+    scanner_model: resolveModelInternal(cwd, 'infra-audit-scanner'),
+    reporter_model: resolveModelInternal(cwd, 'infra-audit-reporter'),
+
+    // Config
+    aws_region: config.aws_region,
+    environment: config.environment,
+    commit_docs: config.commit_docs,
+
+    // IaC detection
+    iac_detection: iacDetection,
+    detected_iac_types: detectedTypes,
+    primary_iac: detectedTypes[0] || 'unknown',
+
+    // Previous audit state
+    audit_scan_exists: auditScanExists,
+    audit_report_exists: pathExistsInternal(cwd, '.infra/AUDIT-REPORT.md'),
+    previous_audit_date: previousAuditDate,
+
+    // Standard infra state
+    infra_exists: pathExistsInternal(cwd, '.infra'),
+    config_exists: pathExistsInternal(cwd, '.infra/config.json'),
+    state_exists: pathExistsInternal(cwd, '.infra/STATE.md'),
+    has_git: pathExistsInternal(cwd, '.git'),
+  };
+
+  output(result, raw);
+}
+
 module.exports = {
   cmdInitNewProject,
   cmdInitAnalyze,
   cmdInitGenerate,
   cmdInitProgress,
+  cmdInitAudit,
 };

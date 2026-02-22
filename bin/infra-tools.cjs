@@ -41,6 +41,7 @@
  *   init analyze                       All context for analyze workflow
  *   init generate                      All context for generate workflow
  *   init progress                      Pipeline stage status
+ *   init audit                         All context for audit workflow
  */
 
 const { error } = require('./lib/core.cjs');
@@ -186,8 +187,11 @@ function main() {
         case 'progress':
           init.cmdInitProgress(cwd, raw);
           break;
+        case 'audit':
+          init.cmdInitAudit(cwd, raw);
+          break;
         default:
-          error(`Unknown init workflow: ${workflow}\nAvailable: new-project, analyze, generate, progress`);
+          error(`Unknown init workflow: ${workflow}\nAvailable: new-project, analyze, generate, progress, audit`);
       }
       break;
     }

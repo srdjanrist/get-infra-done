@@ -18,6 +18,8 @@ const MODEL_PROFILES = {
   'infra-cost-estimator':   { quality: 'sonnet', balanced: 'haiku',  budget: 'haiku' },
   'infra-cicd-gen':         { quality: 'sonnet', balanced: 'sonnet', budget: 'haiku' },
   'infra-validator':        { quality: 'sonnet', balanced: 'sonnet', budget: 'haiku' },
+  'infra-audit-scanner':    { quality: 'opus',   balanced: 'sonnet', budget: 'haiku' },
+  'infra-audit-reporter':   { quality: 'opus',   balanced: 'sonnet', budget: 'haiku' },
 };
 
 // ─── Output helpers ───────────────────────────────────────────────────────────

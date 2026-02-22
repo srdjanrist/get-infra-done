@@ -33,6 +33,11 @@ Modification:
   /infra:add-service    Add new service to existing infrastructure
   /infra:update         Re-analyze, detect drift, update Terraform
 
+Audit:
+  /infra:audit          Full audit pipeline: scan → Q&A → report
+  /infra:audit-drill    Resume gap-filling Q&A from previous audit
+  /infra:audit-report   Generate/regenerate audit report
+
 Status:
   /infra:progress       Show pipeline status and next steps
   /infra:help           This help message
@@ -47,6 +52,9 @@ Status:
   3. /infra:plan            ← Preview terraform changes
   4. terraform apply        ← Deploy (manual step)
 
+  Audit existing IaC:
+     /infra:audit → /infra:audit-drill → /infra:audit-report
+
 ━━━ FILES ━━━
 
   .infra/
@@ -59,6 +67,8 @@ Status:
   ├── ARCHITECTURE.md      Architecture design
   ├── SECURITY-AUDIT.md    Security findings
   ├── COST-ESTIMATE.md     Cost estimates
+  ├── AUDIT-SCAN.md        Infrastructure audit scan
+  ├── AUDIT-REPORT.md      Infrastructure audit report
   └── terraform/
       ├── main.tf          Provider + backend
       ├── variables.tf     Input variables
