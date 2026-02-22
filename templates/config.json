@@ -1,0 +1,13 @@
+{
+  "aws_region": "us-east-1",
+  "environment": "production",
+  "model_profile": "balanced",
+  "commit_docs": true,
+  "terraform_output_dir": ".infra/terraform",
+  "workflow": {
+    "auto_approve_recommendations": false,
+    "run_security_audit": true,
+    "run_cost_estimate": true,
+    "generate_cicd": true
+  }
+}
