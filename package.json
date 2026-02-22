@@ -24,7 +24,7 @@
     "gemini",
     "gemini-cli"
   ],
-  "author": "TACHES",
+  "author": "srdjanrist",
   "license": "MIT",
   "engines": {
     "node": ">=16.7.0"
