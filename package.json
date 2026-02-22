@@ -1,0 +1,35 @@
+{
+  "name": "get-infra-done-cc",
+  "version": "0.1.0",
+  "description": "AI-powered infrastructure generation — from repo scan to production Terraform for Claude Code, OpenCode, and Gemini.",
+  "bin": {
+    "get-infra-done-cc": "bin/install.js"
+  },
+  "files": [
+    "bin",
+    "commands",
+    "agents",
+    "templates",
+    "references",
+    "workflows"
+  ],
+  "keywords": [
+    "claude",
+    "claude-code",
+    "infrastructure",
+    "terraform",
+    "aws",
+    "infrastructure-as-code",
+    "ai",
+    "gemini",
+    "gemini-cli"
+  ],
+  "author": "TACHES",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.7.0"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.cjs"
+  }
+}
