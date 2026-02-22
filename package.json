@@ -1,6 +1,6 @@
 {
   "name": "get-infra-done-cc",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "AI-powered infrastructure generation — from repo scan to production Terraform for Claude Code, OpenCode, and Gemini.",
   "bin": {
     "get-infra-done-cc": "bin/install.js"
